@@ -75,8 +75,19 @@ class Battle implements IBattle
     private function fight($attaker,$loozer)
     {
         $hp=rand(1,100);
+        $block=rand(0,100);
+        $critical=rand(0,100);
+        $g=null;
+        if ($critical<10){
+            $hp=$hp*round(1.1 + mt_rand() / mt_getrandmax() * (5.5 - 1.1),1);
+           $g='Крит';
+        }
+        if($block>85){
+        $hp=0;
+            $g='блок';
+    }
         $loozer->downXp($hp);
-        echo $attaker->getName().' бьет '. $loozer->getName().' на '. $hp.'хп, осталось ( '.$loozer->hp(). ' хп)'."\n";
+        echo $attaker->getName().' бьет '. $loozer->getName().' на '. $hp.'хп, осталось ( '.$loozer->hp(). ' хп)'.$g."\n";
         if (!$loozer->ISLive()){
             unset($this->beings[ array_search($loozer,$this->beings)]);
             echo $loozer->getName().' - был убит!'."\n";
@@ -84,10 +95,11 @@ class Battle implements IBattle
         $this->selected();
     }
 }
-$being= new Being('victor',200);
-$being->getName();
-$being1= new Being('tanya',200);
+$being= new Being('Алёша',300);
+$being1= new Being('Татьянка',300);
+$being2= new Being('Кощей',300);
 $battle=new Battle();
 $battle->addBeing($being);
 $battle->addBeing($being1);
+$battle->addBeing($being2);
 $battle->selected();
